@@ -52,8 +52,8 @@ def updated() {
 }
   
 def init() {
-	log.info "Setting up Schedule (every 2 minutes)..."
-runEvery2Minutes(poll)
+	log.info "Setting up Schedule (every 5 minutes)..."
+runEvery5Minutes(poll)
 }
 
 // handle commands
@@ -85,7 +85,7 @@ def setState (alState){
     if (alState == "off")
     {
     	try {
-        	httpPost([ uri: getAPIUrl("alarmOff"), headers: state.auth.respAuthHeader, contentType: "application/json; charset=utf-8" ])
+        	httpPost([ uri: getAPIUrl("alarmOff"), headers: state.auth.respAuthHeader, contentType: "application/json; charset=utf-8" ]){response ->}
         } catch (e) {
         	timeout = true;
         	log.debug "Alarm SET to OFF Error: $e"
@@ -94,7 +94,7 @@ def setState (alState){
     else if (alState == "home")
     {
     	try {
-        	httpPost([ uri: getAPIUrl("alarmHome"), headers: state.auth.respAuthHeader, contentType: "application/json; charset=utf-8" ])
+        	httpPost([ uri: getAPIUrl("alarmHome"), headers: state.auth.respAuthHeader, contentType: "application/json; charset=utf-8" ]){response ->}
         } catch (e) {
         	timeout = true;
         	log.debug "Alarm SET to HOME Error: $e"
@@ -103,7 +103,7 @@ def setState (alState){
     else if (alState == "away")
     {
     	try {
-        	httpPost([ uri: getAPIUrl("alarmAway"), headers: state.auth.respAuthHeader, contentType: "application/json; charset=utf-8" ])
+        	httpPost([ uri: getAPIUrl("alarmAway"), headers: state.auth.respAuthHeader, contentType: "application/json; charset=utf-8" ]){response ->}
         } catch (e) {
         	timeout = true;
         	log.debug "Alarm SET to AWAY Error: $e"
@@ -332,6 +332,7 @@ def getAPIUrl(urlType) {
     		return "https://api.simplisafe.com/v1/$settings.ssversion/subscriptions/$state.subscriptionId/state/off"
         }
         else
+        if (settings.ssversion == "ss2")
         {
         	return "https://api.simplisafe.com/v1/subscriptions/$state.subscriptionId/state?state=off"
         }       
@@ -343,6 +344,7 @@ def getAPIUrl(urlType) {
     		return "https://api.simplisafe.com/v1/$settings.ssversion/subscriptions/$state.subscriptionId/state/home"
         }
         else
+        if (settings.ssversion == "ss2")
         {
         	return "https://api.simplisafe.com/v1/subscriptions/$state.subscriptionId/state?state=home"
         }
